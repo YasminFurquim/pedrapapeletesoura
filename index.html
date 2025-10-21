@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo Pedra, Papel e Tesoura</title>
+  <style>
+    button {
+      font-size: 2rem;
+      margin: 0.5rem;
+      padding: 1rem;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    #scores {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Pedra, Papel e Tesoura</h1>
+
+  <div>
+    <button class="choice" data-choice="pedra">✊ Pedra</button>
+    <button class="choice" data-choice="papel">📄 Papel</button>
+    <button class="choice" data-choice="tesoura">✌️ Tesoura</button>
+  </div>
+
+  <div id="result"></div>
+
+  <div id="scores">
+    Você: <span id="player-score">0</span> |
+    Computador: <span id="computer-score">0</span>
+  </div>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+    const choices = ['pedra', 'papel', 'tesoura'];
+
+    document.querySelectorAll('.choice').forEach(button => {
+      button.addEventListener('click', () => {
+        const playerChoice = button.dataset.choice;
+        const computerChoice = getComputerChoice();
+        const winner = determineWinner(playerChoice, computerChoice);
+        updateScores(winner);
+        showResult(playerChoice, computerChoice, winner);
+      });
+    });
+
+    function getComputerChoice() {
+      const randomIndex = Math.floor(Math.random() * choices.length);
+      return choices[randomIndex];
+    }
+
+    function determineWinner(player, computer) {
+      if (player === computer) return 'empate';
+
+      if (
+        (player === 'pedra' && computer === 'tesoura') ||
+        (player === 'papel' && computer === 'pedra') ||
+        (player === 'tesoura' && computer === 'papel')
+      ) {
+        return 'jogador';
+      } else {
+        return 'computador';
+      }
+    }
+
+    function updateScores(winner) {
+      if (winner === 'jogador') playerScore++;
+      if (winner === 'computador') computerScore++;
+
+      document.getElementById('player-score').textContent = playerScore;
+      document.getElementById('computer-score').textContent = computerScore;
+    }
+
+    function showResult(player, computer, winner) {
+      const resultDiv = document.getElementById('result');
+      let message = `Você jogou ${emoji(player)}, o computador jogou ${emoji(computer)}. `;
+
+      if (winner === 'empate') {
+        message += "Empate!";
+      } else if (winner === 'jogador') {
+        message += "Você ganhou!";
+      } else {
+        message += "Computador ganhou!";
+      }
+
+      resultDiv.textContent = message;
+    }
+
+    function emoji(choice) {
+      if (choice === 'pedra') return '✊';
+      if (choice === 'papel') return '📄';
+      if (choice === 'tesoura') return '✌️';
+    }
+  </script>
+
+</body>
+</html>
